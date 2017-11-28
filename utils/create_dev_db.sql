@@ -1,0 +1,3 @@
+CREATE USER sirius_dev WITH PASSWORD 'sirius_dev1';
+CREATE DATABASE sirius_dev WITH ENCODING 'UTF8' LC_COLLATE = 'C' LC_CTYPE = 'C' TEMPLATE = template0;
+GRANT ALL PRIVILEGES ON DATABASE sirius_dev to sirius_dev;
