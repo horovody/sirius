@@ -1,1 +1,1 @@
-# sirius-rss
+# sirius
