@@ -177,6 +177,35 @@ namespace Sirius.Data.Access.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Sirius.Data.Entities.SettingEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<Guid>("EntityUid");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512);
+
+                    b.Property<DateTime?>("Updated");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(2048);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")

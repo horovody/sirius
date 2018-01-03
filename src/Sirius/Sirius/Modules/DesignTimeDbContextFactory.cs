@@ -20,7 +20,7 @@ namespace Sirius.Modules
             var builder = new DbContextOptionsBuilder<SiriusDbContext>();
             var connectionString = configuration.GetConnectionString("SiriusConnection");
             builder.UseNpgsql(connectionString);
-            return new SiriusDbContext(builder.Options);
+            return new SiriusDbContext(builder.Options, configuration);
         }
     }
 }

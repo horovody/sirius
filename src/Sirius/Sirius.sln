@@ -9,7 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sirius.Data.Access", "Siriu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleApps", "ConsoleApps", "{66B16FF0-5EF0-49D9-9890-40A5F849C82D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirius.Sandbox", "Sirius.Sandbox\Sirius.Sandbox.csproj", "{00C8BC5D-8C2C-40C8-8B2F-A08A49A7142B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sirius.Sandbox", "Sirius.Sandbox\Sirius.Sandbox.csproj", "{00C8BC5D-8C2C-40C8-8B2F-A08A49A7142B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirius.Shared", "Sirius.Shared\Sirius.Shared.csproj", "{4C8A9D19-2DB5-436F-BDBE-6FCC1DD3E038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirius.Infrastructure", "Sirius.Infrastructure\Sirius.Infrastructure.csproj", "{38C6545F-EA0E-45D9-8058-C81B4358E9CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirius.Data", "Sirius.Data\Sirius.Data.csproj", "{30398DA8-3EFB-4654-A16B-88AE9E8ADD9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirius.Logic", "Sirius.Logic\Sirius.Logic.csproj", "{8A8EA05D-39AC-4E92-A63A-1D14E7313D56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +37,22 @@ Global
 		{00C8BC5D-8C2C-40C8-8B2F-A08A49A7142B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00C8BC5D-8C2C-40C8-8B2F-A08A49A7142B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00C8BC5D-8C2C-40C8-8B2F-A08A49A7142B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C8A9D19-2DB5-436F-BDBE-6FCC1DD3E038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C8A9D19-2DB5-436F-BDBE-6FCC1DD3E038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C8A9D19-2DB5-436F-BDBE-6FCC1DD3E038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C8A9D19-2DB5-436F-BDBE-6FCC1DD3E038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C6545F-EA0E-45D9-8058-C81B4358E9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C6545F-EA0E-45D9-8058-C81B4358E9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C6545F-EA0E-45D9-8058-C81B4358E9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C6545F-EA0E-45D9-8058-C81B4358E9CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30398DA8-3EFB-4654-A16B-88AE9E8ADD9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30398DA8-3EFB-4654-A16B-88AE9E8ADD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30398DA8-3EFB-4654-A16B-88AE9E8ADD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30398DA8-3EFB-4654-A16B-88AE9E8ADD9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A8EA05D-39AC-4E92-A63A-1D14E7313D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A8EA05D-39AC-4E92-A63A-1D14E7313D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A8EA05D-39AC-4E92-A63A-1D14E7313D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A8EA05D-39AC-4E92-A63A-1D14E7313D56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sirius.Data\Sirius.Data.csproj" />
+    <ProjectReference Include="..\Sirius.Infrastructure\Sirius.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sirius.Shared\Sirius.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Security\" />
+  </ItemGroup>
+
+</Project>
