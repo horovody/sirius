@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +9,8 @@ using Sirius.Logic.Dtos;
 
 namespace Sirius.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme, Policy = "Access")]
     public class SettingsController: Controller
     {
         private readonly ICrudDataService<SettingEntity, SettingDto> _settingDataService;

@@ -1,19 +1,15 @@
 using System;
-using System.Security.Principal;
-using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Sirius.Data.Access;
 using Sirius.Logic;
 using Sirius.Modules;
@@ -22,9 +18,6 @@ namespace Sirius
 {
     public class Startup
     {
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // TODO: get this from somewhere secure
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,30 +31,52 @@ namespace Sirius
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<SiriusDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IPrincipal>(
-                provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
-            // Add framework services.
-            services.AddMvc();
-
-            services.AddAuthentication(x =>
+            // Identity options.
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+                // Lockout settings.
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(1);
+            });
+            // Role based Authorization: policy based role checks.
+            services.AddAuthorization(options =>
+            {
+                // Policy for dashboard: only administrator role.
+                options.AddPolicy("Manage", policy => policy.RequireRole("admin"));
+                // Policy for resources: user or administrator roles. 
+                options.AddPolicy("Access", policy => policy.RequireRole("admin", "user"));
+            });
+            // Adds IdentityServer.
+            services.AddIdentityServer()
+                // The AddDeveloperSigningCredential extension creates temporary key material for signing tokens.
+                // This might be useful to get started, but needs to be replaced by some persistent key material for production scenarios.
+                // See http://docs.identityserver.io/en/release/topics/crypto.html#refcrypto for more information.
+                .AddDeveloperSigningCredential()
+                .AddInMemoryPersistedGrants()
+                // TODO: configure IdentityServer to use EntityFramework (EF) as the storage mechanism for configuration data
+                // see https://identityserver4.readthedocs.io/en/release/quickstarts/8_entity_framework.html
+                .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityConfig.GetApiResources())
+                .AddInMemoryClients(IdentityConfig.GetClients())
+                .AddAspNetIdentity<IdentityUser>(); // IdentityServer4.AspNetIdentity.
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
                 {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = _signingKey,
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
+                    options.Authority = "http://localhost:59136";
+                    options.RequireHttpsMetadata = false;
+                    options.ApiName = "WebAPI";
                 });
+
+            services.AddMvc();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<SiriusDataAccessModule>();
@@ -92,7 +107,7 @@ namespace Sirius
             }
 
             app.UseStaticFiles();
-            app.UseAuthentication();
+            app.UseIdentityServer();
 
             app.UseMvc(routes =>
             {
