@@ -1,35 +1,36 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sirius.Data.Access.Auth;
 using Sirius.Models.Account;
+using Sirius.Shared;
+using Sirius.Shared.Auth;
 using Sirius.Shared.Constants;
 
 namespace Sirius.Controllers
 {
     [Route("api/[controller]")]
-    public class AccountController: Controller
+    public class AccountController : Controller
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<UserEntity> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<UserEntity> userManager,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<UserEntity> signInManager,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _signInManager = signInManager;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Sirius.Controllers
         // POST: api/account
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post([FromBody]RegisterAccountViewModel model)
+        public async Task<IActionResult> Post([FromBody] RegisterAccountViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +63,7 @@ namespace Sirius.Controllers
                 {
                     await AddToRoleAsync(model.UserName, AuthRoles.User);
                     await AddClaimsAsync(model.UserName);
+                    await _unitOfWork.SaveChangesAsync();
                 }
 
                 return new JsonResult(result);
@@ -70,6 +72,7 @@ namespace Sirius.Controllers
         }
 
         #region Helpers
+
         //TODO: this should not be here
         private async Task AddToRoleAsync(string userName, string roleName)
         {
@@ -80,8 +83,9 @@ namespace Sirius.Controllers
         private async Task AddClaimsAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            var claims = new List<Claim> {
-                new Claim(type: JwtClaimTypes.GivenName, value: user.GivenName),
+            var claims = new List<Claim>
+            {
+                new Claim(type: SiriusClaimTypes.GivenName, value: user.GivenName),
             };
             await _userManager.AddClaimsAsync(user, claims);
         }

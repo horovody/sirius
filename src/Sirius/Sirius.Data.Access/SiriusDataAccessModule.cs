@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Sirius.Data.Access.Initialization;
 using Sirius.Shared;
 
 namespace Sirius.Data.Access
@@ -17,6 +18,10 @@ namespace Sirius.Data.Access
                 .As<IUnitOfWork>()
                 .As<DbContext>()
                 .AsSelf()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<DbSeeder>()
+                .As<IDbSeeder>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterGeneric(typeof(Store<>))

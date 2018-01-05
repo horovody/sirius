@@ -127,7 +127,7 @@
     "component-selector": [
       true,
       "element",
-      "app",
+      "sir",
       "kebab-case"
     ],
     "no-output-on-prefix": true,

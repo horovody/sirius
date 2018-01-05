@@ -53,7 +53,7 @@ namespace Sirius.Shared.Auth
         private string GetGivenName()
         {
           var givenName = _principal
-            .FindFirst(p => p.Type == ClaimTypes.GivenName);
+            .FindFirst(p => p.Type == ClaimTypes.GivenName || p.Type == SiriusClaimTypes.GivenName);
           return givenName?.Value;
         }
 
