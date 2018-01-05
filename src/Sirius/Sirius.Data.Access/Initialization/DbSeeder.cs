@@ -28,12 +28,6 @@ namespace Sirius.Data.Access.Initialization
         {
             context.Database.EnsureCreated();
 
-            var adminUserr = await _userManager.FindByNameAsync("horovody@gmail.com");
-            string passHash = _userManager.PasswordHasher.HashPassword(adminUserr, "Admin123");
-            UserStore<UserEntity> store = new UserStore<UserEntity>(context);
-            await store.SetPasswordHashAsync(adminUserr, passHash);
-            context.SaveChanges();
-
             if (context.Users.Any())
             {
                 return; // Db has been seeded.
