@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Sirius.Data.Access.Auth;
 using Sirius.Data.Entities;
 using Sirius.Shared;
 using Sirius.Shared.Entities;
 
 namespace Sirius.Data.Access
 {
-    public class SiriusDbContext: IdentityDbContext, IUnitOfWork
+    public class SiriusDbContext: IdentityDbContext<UserEntity>, IUnitOfWork
     {
         private readonly IConfiguration _config;
 

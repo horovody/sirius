@@ -13,6 +13,6 @@
         /// <summary>
         /// Client (simple user)
         /// </summary>
-        public const string Client = "client";
+        public const string User = "user";
     }
 }

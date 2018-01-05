@@ -11,8 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sirius.Data.Access;
+using Sirius.Data.Access.Auth;
 using Sirius.Logic;
 using Sirius.Modules;
+using Sirius.Shared.Auth;
+using Sirius.Shared.Constants;
 
 namespace Sirius
 {
@@ -31,6 +34,8 @@ namespace Sirius
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IUserContext>(provider =>
+                new ClaimsUserContext(provider.GetService<IHttpContextAccessor>().HttpContext.User));
             this.AddIdentity(services);
 
             services.AddMvc();
@@ -81,7 +86,7 @@ namespace Sirius
 
         private void AddIdentity(IServiceCollection services)
         {
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<UserEntity, IdentityRole>()
                 .AddEntityFrameworkStores<SiriusDbContext>()
                 .AddDefaultTokenProviders();
             // Identity options.
@@ -102,15 +107,16 @@ namespace Sirius
             services.AddAuthorization(options =>
             {
                 // Policy for dashboard: only administrator role.
-                options.AddPolicy("Manage", policy => policy.RequireRole("admin"));
+                options.AddPolicy("Manage", policy => policy.RequireRole(AuthRoles.Admin));
                 // Policy for resources: user or administrator roles. 
-                options.AddPolicy("Access", policy => policy.RequireRole("admin", "user"));
+                options.AddPolicy("Access", policy => policy.RequireRole(AuthRoles.Admin, AuthRoles.User));
             });
             // Adds IdentityServer.
             services.AddIdentityServer()
                 // The AddDeveloperSigningCredential extension creates temporary key material for signing tokens.
                 // This might be useful to get started, but needs to be replaced by some persistent key material for production scenarios.
                 // See http://docs.identityserver.io/en/release/topics/crypto.html#refcrypto for more information.
+                //TODO: make some seriuos key for production
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 // TODO: configure IdentityServer to use EntityFramework (EF) as the storage mechanism for configuration data
@@ -118,11 +124,11 @@ namespace Sirius
                 .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources())
                 .AddInMemoryClients(IdentityConfig.GetClients())
-                .AddAspNetIdentity<IdentityUser>(); // IdentityServer4.AspNetIdentity.
+                .AddAspNetIdentity<UserEntity>();
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:59136";//todo: move to config
+                    options.Authority = "http://localhost:59136";//TODO: move to config
                     options.RequireHttpsMetadata = false;
                     options.ApiName = "WebAPI";
                 });
