@@ -1,8 +1,7 @@
 import {ModuleWithProviders} from '@angular/core';
-import {AuthGuard} from './core/auth/auth.guard';
 import {RouterModule, Routes} from '@angular/router';
 export const routes: Routes = [
-  {path: '', redirectTo: 'dashboard', pathMatch: 'full', canActivate: [AuthGuard]},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: '**', redirectTo: 'page-404' }
 ];
 

@@ -7,28 +7,6 @@
         -moz-osx-font-smoothing: grayscale;
     }
 
-    .sir__content {
-        padding: 32px;
-        box-sizing: border-box;
-
-        h1 {
-            display: inline-block;
-            font-size: 24px;
-            font-weight: 500;
-            margin: 8px 0px;
-        }
-
-        h1:after {
-            content: "";
-            display: block;
-            height: 1px;
-            width: 40%;
-            margin: 24px 0px 10px;
-            background: $lightgray;
-            clear: both;
-        }
-    }
-
     .mat-toolbar {
         .mat-icon {
             cursor: pointer;
@@ -56,34 +34,49 @@
     .fill-remaining-space {
         flex: 1 1 auto;
     }
+
+    .full-width {
+        width: 100%;
+    }
 }
 
 // Stretch to screen size in fullscreen mode.
 .sir__content {
-    width: 100%;
-    height: 100%;
+    padding: 32px;
     box-sizing: border-box;
-}
 
-.active-link {
-    .mat-list-item-content {
-        color: $blue;
+    h1 {
+        display: inline-block;
+        font-size: 24px;
+        font-weight: 500;
+        margin: 8px 0px;
+    }
+
+    h1:after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 40%;
+        margin: 24px 0px 10px;
+        background: $lightgray;
+        clear: both;
     }
 }
 
-.account-card-container {
+.sir__content {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sir__card-container {
     display: flex;
     justify-content: center;
 
     mat-card {
         width: 400px;
     }
-}
 
-.has-error {
-    color: $brightred;
-}
-
-.full-width {
-    width: 100%;
+    &__has-error {
+        color: $brightred;
+    }
 }

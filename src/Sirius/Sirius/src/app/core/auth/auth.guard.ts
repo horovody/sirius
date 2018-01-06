@@ -21,16 +21,7 @@ export class AuthGuard implements CanActivate {
           const url: string = state.url;
           // TODO need to pass roles from route and check here
           if (this.signedIn) {
-            if (url !== '/dashboard') {
-              return true;
-            } else {
-              if (this.authService.isInRole('admin')) {
-                return true;
-              } else {
-                this.router.navigate(['/home']);
-                return false;
-              }
-            }
+            return true;
           }
 
           // Stores the attempted URL for redirecting.

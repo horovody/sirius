@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'sir-top-bar',
   templateUrl: './top-bar.component.html',
+  styleUrls: ['./top-bar.component.scss']
 })
 export class TopBarComponent implements OnInit, OnDestroy {
   signedIn: Observable<boolean>;

@@ -9,6 +9,7 @@ import {OAuthConfig} from './oauth.config';
 import {AuthHttpInterceptor} from './auth.http.interceptor';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthErrorInterceptor} from './auth.error.interceptor';
+import {MainPageGuard} from './main.page.guard';
 
 export function initOAuth(oAuthConfig: OAuthConfig): Function {
   return () => oAuthConfig.load();
@@ -29,6 +30,7 @@ export function initOAuth(oAuthConfig: OAuthConfig): Function {
     AccountService,
     AuthService,
     OAuthConfig,
+    MainPageGuard,
     {
       provide: APP_INITIALIZER,
       useFactory: initOAuth,

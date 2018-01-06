@@ -49,8 +49,8 @@ export class SignupComponent {
         this.router.navigate([redirect]);
       })
       .catch((error: any) => {
-        if (error.body !== '') {
-          const body: any = error.json();
+        if (error.error !== '') {
+          const body: any = error.error;
 
           switch (body.error) {
             case 'invalid_grant':

@@ -34,8 +34,8 @@ export class SigninComponent {
       })
       .catch((error: any) => {
         // Checks for error in response (error from the Token endpoint).
-        if (error.body !== '') {
-          const body: any = error.json();
+        if (error.error !== '') {
+          const body: any = error.error;
 
           switch (body.error) {
             case 'invalid_grant':
