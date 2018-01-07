@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sirius.Data.Access\Sirius.Data.Access.csproj" />
+    <ProjectReference Include="..\Sirius.DictionaryApi\Sirius.DictionaryApi.csproj" />
     <ProjectReference Include="..\Sirius.Logic\Sirius.Logic.csproj" />
   </ItemGroup>
 

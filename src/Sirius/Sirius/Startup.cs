@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sirius.Data.Access;
 using Sirius.Data.Access.Auth;
+using Sirius.DictionaryApi;
 using Sirius.Logic;
 using Sirius.Modules;
 using Sirius.Shared.Auth;
@@ -43,6 +44,7 @@ namespace Sirius
             var builder = new ContainerBuilder();
             builder.RegisterModule<SiriusDataAccessModule>();
             builder.RegisterModule<SiriusLogicModule>();
+            builder.RegisterModule<SiriusDictApiModule>();
             builder.RegisterModule<SiriusWebModule>();
 
             builder.Populate(services);
