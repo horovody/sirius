@@ -6,6 +6,7 @@ namespace Sirius.DictionaryApi.Models.Response
     /// <summary>
     /// Translation of Dictionaty Api entry
     /// </summary>
+    [DataContract(Name = "tr")]
     public class DictApiResponseTranslation: DictApiResponseElementBase
     {
         /// <summary>

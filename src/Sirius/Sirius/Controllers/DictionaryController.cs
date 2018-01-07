@@ -1,7 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sirius.DictionaryApi;
 using Sirius.DictionaryApi.Models.Request;

@@ -20,12 +20,7 @@ namespace Sirius.DictionaryApi
         /// <param name="options">Lookup options</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Dictionary entry</returns>
-        /// <exception cref="SiriusDictApiExceededLimitException">Exceeded the daily limit on the number of requests.</exception>
-        /// <exception cref="SiriusDictApiKeyBlockedException">The API key has been blocked.</exception>
-        /// <exception cref="SiriusDictApiKeyInvalidException">Invalid API key.</exception>
-        /// <exception cref="SiriusDictApiNotSupportedException">The specified translation direction is not supported.</exception>
-        /// <exception cref="SiriusDictApiTextLongException">The text size exceeds the maximum.</exception>
-        /// <exception cref="SiriusDictApiUnknownException">Unknown dictionary api exception</exception>
+        /// <exception cref="SiriusDictApiException">Dictionary api exception</exception>
         Task<DictApiResponse> LookupAsync([NotNull] string apiUrl, [NotNull] string apiKey,
             [NotNull] DictApiRequestOptions options,
             CancellationToken cancellationToken);

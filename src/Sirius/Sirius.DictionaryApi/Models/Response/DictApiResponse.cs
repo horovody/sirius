@@ -6,6 +6,7 @@ namespace Sirius.DictionaryApi.Models.Response
     /// <summary>
     /// Dictionary API response
     /// </summary>
+    [DataContract]
     public class DictApiResponse
     {
         /// <summary>

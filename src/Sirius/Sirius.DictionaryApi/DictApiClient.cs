@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Sirius.DictionaryApi.Enums;
+using Sirius.DictionaryApi.Exceptions;
 using Sirius.DictionaryApi.Models.Request;
 using Sirius.DictionaryApi.Models.Response;
+using Sirius.Shared;
 
 namespace Sirius.DictionaryApi
 {
@@ -29,25 +30,49 @@ namespace Sirius.DictionaryApi
                 throw new ArgumentNullException(nameof(options));
             }
 
+            var url =
+                $"{apiUrl}?key={apiKey}&lang={options.Language}&text={options.Text}&ui={options.Ui}&flags={options.Flags}_11";
+
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    var serializer = new DataContractJsonSerializer(typeof(DictApiResponse));
-                    var url =
-                        $"{apiUrl}?key={apiKey}&lang={options.Language}&text={options.Text}&ui={options.Ui}&flags={options.Flags}";
-                    var data = await httpClient.GetStringAsync(url);
-                    
-                    var streamData = await httpClient.GetStreamAsync(url);
-                    var response = serializer.ReadObject(streamData) as DictApiResponse;
-                    return response;
-                }
+                return await this.LookupInternalAsync(url, cancellationToken);
             }
-            catch (Exception e)
+            catch (SiriusDictApiException)
             {
                 throw;
             }
+            catch (Exception e)
+            {
+                throw new SiriusDictApiException($"The url is: {url}", e, DictApiErrorCode.KeyBlocked);
+            }
             
+        }
+
+        private async Task<DictApiResponse> LookupInternalAsync(string url, CancellationToken cancellationToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var serializer = new DataContractJsonSerializer(typeof(DictApiResponse));
+                
+                var data = await httpClient.GetAsync(url, cancellationToken);
+                if (data.IsSuccessStatusCode)
+                {
+                    var streamData = await data.Content.ReadAsStreamAsync();
+                    var response = serializer.ReadObject(streamData) as DictApiResponse;
+                    return response;
+                }
+                else
+                {
+                    DictApiErrorCode code = DictApiErrorCode.Unknown;
+                    if (((int) data.StatusCode & (int) DictApiErrorCode.Known) != 0)
+                    {
+                        code = (DictApiErrorCode)(int)data.StatusCode;
+                    }
+
+                    throw new SiriusDictApiException($"The url is: {url}", code); //TODO:+payload
+                }
+
+            }
         }
     }
 }

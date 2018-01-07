@@ -5,6 +5,7 @@ namespace Sirius.DictionaryApi.Models.Response
     /// <summary>
     /// Base class for Dictionary API Response elements
     /// </summary>
+    [DataContract]
     public abstract class DictApiResponseElementBase
     {
         /// <summary>
