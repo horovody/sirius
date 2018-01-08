@@ -8,7 +8,6 @@
         TextTooLong = 413,
         LangNotSupported = 501,
 
-        Unknown = 500,
-        Known = KeyInvalid & KeyBlocked & LimitExceeded & TextTooLong & LangNotSupported
+        Unknown = 0
     }
 }

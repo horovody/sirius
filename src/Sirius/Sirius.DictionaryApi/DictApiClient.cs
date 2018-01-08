@@ -3,17 +3,24 @@ using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Sirius.DictionaryApi.Enums;
 using Sirius.DictionaryApi.Exceptions;
 using Sirius.DictionaryApi.Models.Request;
 using Sirius.DictionaryApi.Models.Response;
-using Sirius.Shared;
 
 namespace Sirius.DictionaryApi
 {
     /// <inheritdoc />
     internal class DictApiClient: IDictApiClient
     {
+        private readonly DictionaryApiOptions _apiOptions;
+
+        public DictApiClient(IOptions<DictionaryApiOptions> apiOptions)
+        {
+            _apiOptions = apiOptions.Value;
+        }
+
         /// <inheritdoc />
         public async Task<DictApiResponse> LookupAsync(string apiUrl, string apiKey, DictApiRequestOptions options, CancellationToken cancellationToken)
         {
@@ -31,7 +38,7 @@ namespace Sirius.DictionaryApi
             }
 
             var url =
-                $"{apiUrl}?key={apiKey}&lang={options.Language}&text={options.Text}&ui={options.Ui}&flags={options.Flags}_11";
+                $"{apiUrl}?key={apiKey}&lang={options.Language}&text={options.Text}&ui={options.Ui}&flags={options.Flags}";
 
             try
             {
@@ -43,11 +50,23 @@ namespace Sirius.DictionaryApi
             }
             catch (Exception e)
             {
-                throw new SiriusDictApiException($"The url is: {url}", e, DictApiErrorCode.KeyBlocked);
+                throw new SiriusDictApiException($"Lookup failed. Requested url is: {url}", e, DictApiErrorCode.Unknown);
             }
             
         }
 
+        /// <inheritdoc />
+        public async Task<DictApiResponse> LookupAsync(DictApiRequestOptions options, CancellationToken cancellationToken)
+        {
+            return await this.LookupAsync(_apiOptions.BaseUrl, _apiOptions.ApiKey, options, cancellationToken);
+        }
+
+        /// <summary>
+        /// internal method for Dictionary lookup
+        /// </summary>
+        /// <param name="url">Lookuop url</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private async Task<DictApiResponse> LookupInternalAsync(string url, CancellationToken cancellationToken)
         {
             using (var httpClient = new HttpClient())
@@ -63,13 +82,13 @@ namespace Sirius.DictionaryApi
                 }
                 else
                 {
-                    DictApiErrorCode code = DictApiErrorCode.Unknown;
-                    if (((int) data.StatusCode & (int) DictApiErrorCode.Known) != 0)
+                    DictApiErrorCode code = (DictApiErrorCode)(int)data.StatusCode;
+                    if (!typeof(DictApiErrorCode).IsEnumDefined(code))
                     {
-                        code = (DictApiErrorCode)(int)data.StatusCode;
+                        code = DictApiErrorCode.Unknown;
                     }
-
-                    throw new SiriusDictApiException($"The url is: {url}", code); //TODO:+payload
+                    var responseBody = await data.Content.ReadAsStringAsync();
+                    throw new SiriusDictApiException($"Lookup failed. Requested url is: {url}", code, responseBody);
                 }
 
             }

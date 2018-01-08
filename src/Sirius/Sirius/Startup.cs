@@ -34,6 +34,7 @@ namespace Sirius
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(Configuration);
+            services.Configure<DictionaryApiOptions>(Configuration.GetSection("DictionaryApi"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserContext>(provider =>
                 new ClaimsUserContext(provider.GetService<IHttpContextAccessor>().HttpContext.User));

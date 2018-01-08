@@ -24,5 +24,15 @@ namespace Sirius.DictionaryApi
         Task<DictApiResponse> LookupAsync([NotNull] string apiUrl, [NotNull] string apiKey,
             [NotNull] DictApiRequestOptions options,
             CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Searches for a word or phrase in the dictionary and returns an automatically generated dictionary entry.
+        /// Method using Dictionaty API options from <see cref="DictionaryApiOptions"/> configured via DI
+        /// </summary>
+        /// <param name="options">Lookup options</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Dictionary entry</returns>
+        Task<DictApiResponse> LookupAsync([NotNull] DictApiRequestOptions options,
+            CancellationToken cancellationToken);
     }
 }

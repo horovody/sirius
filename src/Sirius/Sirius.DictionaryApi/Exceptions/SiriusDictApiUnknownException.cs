@@ -12,6 +12,8 @@ namespace Sirius.DictionaryApi.Exceptions
     {
         public DictApiErrorCode? StatusCode { get; set; }
 
+        public object Payload { get; set; }
+
         public SiriusDictApiException()
         {
         }
@@ -23,6 +25,11 @@ namespace Sirius.DictionaryApi.Exceptions
         public SiriusDictApiException(string message, DictApiErrorCode statusCode) : base(message)
         {
             StatusCode = statusCode;
+        }
+
+        public SiriusDictApiException(string message, DictApiErrorCode statusCode, object payload) : this(message, statusCode)
+        {
+            Payload = payload;
         }
 
         public SiriusDictApiException(string message, Exception inner, DictApiErrorCode statusCode) : base(message, inner)
