@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Sirius.Shared;
@@ -44,17 +45,17 @@ namespace Sirius.Data.Access
             return this.DbSet.Where(predicate);
         }
 
-        public async Task<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await this.DbSet.SingleOrDefaultAsync(predicate);
+            return await this.DbSet.SingleOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public async Task<TEntity> Get(long id)
+        public async Task<TEntity> GetAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await this.DbSet.FindAsync(id);
+            return await this.DbSet.FindAsync(id, cancellationToken);
         }
 
-        public async Task<TEntity> Add(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             var entry = this.Context.Entry(entity);
             if (entry.State != EntityState.Detached)
@@ -63,12 +64,12 @@ namespace Sirius.Data.Access
             }
             else
             {
-                await this.DbSet.AddAsync(entity);
+                await this.DbSet.AddAsync(entity, cancellationToken);
             }
             return entity;
         }
 
-        public async Task<TEntity> Update(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
             var entry = this.Context.Entry(entity);
             if (entry.State == EntityState.Detached)
@@ -80,7 +81,7 @@ namespace Sirius.Data.Access
             return entity;
         }
 
-        public async Task<TEntity> Remove(TEntity entity)
+        public async Task<TEntity> RemoveAsync(TEntity entity, CancellationToken cancellationToken)
         {
             var entry = this.Context.Entry(entity);
             if (entry.State != EntityState.Deleted)
@@ -95,15 +96,15 @@ namespace Sirius.Data.Access
             return entity;
         }
 
-        public async Task<TEntity> Remove(long id)
+        public async Task<TEntity> RemoveAsync(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await this.Get(id);
-            return await this.Remove(entity);
+            var entity = await this.GetAsync(id, cancellationToken);
+            return await this.RemoveAsync(entity, cancellationToken);
         }
 
-        public async Task Remove(Expression<Func<TEntity, bool>> predicate)
+        public async Task RemoveAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var entities = await this.DbSet.Where(predicate).ToListAsync();
+            var entities = await this.DbSet.Where(predicate).ToListAsync(cancellationToken);
             this.DbSet.RemoveRange(entities);
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Sirius.Shared;
@@ -22,14 +24,14 @@ namespace Sirius.Data.Access
             return _container.Resolve<IStore<TEntity>>();
         }
 
-        public async Task<TEntity> Get<TEntity>(long id) where TEntity : class, IEntity
+        public async Task<TEntity> GetAsync<TEntity>(Guid id, CancellationToken cancellationToken) where TEntity : class, IEntity
         {
-            return await this.Store<TEntity>().Get(id);
+            return await this.Store<TEntity>().GetAsync(id, cancellationToken);
         }
 
-        public async Task<TEntity> GetExists<TEntity>(long id) where TEntity : class, IEntity
+        public async Task<TEntity> GetExistsAsync<TEntity>(Guid id, CancellationToken cancellationToken) where TEntity : class, IEntity
         {
-            var entity = await this.Store<TEntity>().Get(id);
+            var entity = await this.Store<TEntity>().GetAsync(id, cancellationToken);
             if (entity == null || entity.IsDeleted) return null;
             return entity;
         }
@@ -44,20 +46,20 @@ namespace Sirius.Data.Access
             return this.Store<TEntity>().Query().Exists();
         }
 
-        public async Task<TEntity> Add<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public async Task<TEntity> AddAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class, IEntity
         {
-            return await this.Store<TEntity>().Add(entity);
+            return await this.Store<TEntity>().AddAsync(entity, cancellationToken);
         }
 
-        public async Task<TEntity> Update<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class, IEntity
         {
-            return await this.Store<TEntity>().Update(entity);
+            return await this.Store<TEntity>().UpdateAsync(entity, cancellationToken);
         }
 
-        public async Task<TEntity> Delete<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public async Task<TEntity> DeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class, IEntity
         {
             entity.IsDeleted = true;
-            return await this.Store<TEntity>().Update(entity);
+            return await this.Store<TEntity>().UpdateAsync(entity, cancellationToken);
         }
 
         #endregion

@@ -1,7 +1,9 @@
-﻿namespace Sirius.Logic
+﻿using System;
+
+namespace Sirius.Logic
 {
     public interface IEntityTransferObject
     {
-        long Id { get; set; }
+        Guid Id { get; set; }
     }
 }

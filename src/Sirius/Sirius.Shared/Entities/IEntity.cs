@@ -1,8 +1,10 @@
-﻿namespace Sirius.Shared.Entities
+﻿using System;
+
+namespace Sirius.Shared.Entities
 {
     public interface IEntity
     {
-        long Id { get; set; }
+        Guid Id { get; set; }
 
         bool IsDeleted { get; set; }
     }

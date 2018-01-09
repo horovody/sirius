@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Sirius.Shared;
 using Sirius.Shared.Entities;
@@ -24,9 +26,9 @@ namespace Sirius.Logic.DataServices
 
         protected IUnitOfWork UnitOfWork { get; set; }
 
-        public virtual async Task<TModel> GetAsync(long id)
+        public virtual async Task<TModel> GetAsync(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await this.Store.Get(id);
+            var entity = await this.Store.GetAsync(id, cancellationToken);
             return this.Mapper.Map<TEntity, TModel>(entity);
         }
 
@@ -47,12 +49,12 @@ namespace Sirius.Logic.DataServices
             return GetQuery(QueryInternal());
         }
 
-        public virtual async Task<TModel> CreateAsync(TModel model)
+        public virtual async Task<TModel> CreateAsync(TModel model, CancellationToken cancellationToken)
         {
             var entity = this.Mapper.Map<TModel, TEntity>(model);
-            await this.Store.Add(entity);
+            await this.Store.AddAsync(entity, cancellationToken);
             await OnCreateAsync(entity);
-            await this.UnitOfWork.SaveChangesAsync();
+            await this.UnitOfWork.SaveChangesAsync(cancellationToken);
             model.Id = entity.Id;
             return this.Mapper.Map<TModel>(entity);
         }
@@ -69,23 +71,23 @@ namespace Sirius.Logic.DataServices
         {
         }
 
-        public virtual async Task<TModel> UpdateAsync(TModel model)
+        public virtual async Task<TModel> UpdateAsync(TModel model, CancellationToken cancellationToken)
         {
-            var entity = await this.Store.Get(model.Id);
+            var entity = await this.Store.GetAsync(model.Id, cancellationToken);
             if (entity == null) return null;
             this.Mapper.Map(model, entity);
             await this.OnUpdateAsync(entity);
-            await this.UnitOfWork.SaveChangesAsync();
+            await this.UnitOfWork.SaveChangesAsync(cancellationToken);
             return this.Mapper.Map<TModel>(entity);
         }
 
-        public virtual async Task<TModel> DeleteAsync(TModel model)
+        public virtual async Task<TModel> DeleteAsync(TModel model, CancellationToken cancellationToken)
         {
-            var entity = await this.Store.Get(model.Id);
+            var entity = await this.Store.GetAsync(model.Id, cancellationToken);
             if (entity == null) return null;
             entity.IsDeleted = true;
             await this.OnDeleteAsync(entity);
-            await this.UnitOfWork.SaveChangesAsync();
+            await this.UnitOfWork.SaveChangesAsync(cancellationToken);
             return this.Mapper.Map<TModel>(entity);
         }
     }

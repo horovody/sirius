@@ -182,7 +182,7 @@ namespace Sirius.Data.Access.Migrations
 
             modelBuilder.Entity("Sirius.Data.Entities.SettingEntity", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Alias")
@@ -190,8 +190,6 @@ namespace Sirius.Data.Access.Migrations
                         .HasMaxLength(256);
 
                     b.Property<DateTime>("Created");
-
-                    b.Property<Guid>("EntityUid");
 
                     b.Property<bool>("IsDeleted");
 

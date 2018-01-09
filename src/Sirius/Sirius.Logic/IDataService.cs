@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Sirius.Shared.Entities;
 
@@ -7,7 +9,7 @@ namespace Sirius.Logic
     public interface IReadDataService<TModel>
         where TModel : class, IEntityTransferObject
     {
-        Task<TModel> GetAsync(long id);
+        Task<TModel> GetAsync(Guid id, CancellationToken cancellationToken);
     }
 
     public interface IQueryDataService<out TModel>
@@ -19,19 +21,19 @@ namespace Sirius.Logic
     public interface ICreateDataService<TModel>
         where TModel : class, IEntityTransferObject
     {
-        Task<TModel> CreateAsync(TModel model);
+        Task<TModel> CreateAsync(TModel model, CancellationToken cancellationToken);
     }
 
     public interface IUpdateDataService<TModel>
         where TModel : class, IEntityTransferObject
     {
-        Task<TModel> UpdateAsync(TModel update);
+        Task<TModel> UpdateAsync(TModel update, CancellationToken cancellationToken);
     }
 
     public interface IDeleteDataService<TModel>
         where TModel : class, IEntityTransferObject
     {
-        Task<TModel> DeleteAsync(TModel model);
+        Task<TModel> DeleteAsync(TModel model, CancellationToken cancellationToken);
     }
 
     public interface ICrudDataService<TEntity, TModel> :
