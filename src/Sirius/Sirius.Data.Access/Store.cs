@@ -52,7 +52,7 @@ namespace Sirius.Data.Access
 
         public async Task<TEntity> GetAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await this.DbSet.FindAsync(id, cancellationToken);
+            return await this.DbSet.FindAsync(id);
         }
 
         public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)

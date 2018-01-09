@@ -9,7 +9,7 @@ using Sirius.DictionaryApi.Models.Request;
 namespace Sirius.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme, Policy = "Access")]
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme, Policy = "Access")]
     public class DictionaryController: Controller
     {
         private readonly IDictApiClient _dictApiClient;

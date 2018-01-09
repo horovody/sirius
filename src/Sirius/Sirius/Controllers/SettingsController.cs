@@ -1,31 +1,24 @@
-﻿using System.Threading.Tasks;
+using System.Threading;
+using System.Threading.Tasks;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sirius.Controllers.Base;
 using Sirius.Data.Entities;
 using Sirius.Logic;
 using Sirius.Logic.Dtos;
+using Sirius.Shared;
 
 namespace Sirius.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme, Policy = "Access")]
-    public class SettingsController: Controller
+    public class SettingsController: ApiCrudControllerBase<SettingEntity, SettingDto>
     {
-        private readonly ICrudDataService<SettingEntity, SettingDto> _settingDataService;
-
-        public SettingsController(ICrudDataService<SettingEntity, SettingDto> settingDataService)
+        public SettingsController(ICrudDataService<SettingEntity, SettingDto> settingDataService,
+            IUnitOfWork unitOfWork): base(settingDataService, unitOfWork)
         {
-            _settingDataService = settingDataService;
-        }
-
-        // GET api/settings
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var list = await _settingDataService.GetQuery().ToListAsync();
-            return Ok(list);
         }
     }
 }
